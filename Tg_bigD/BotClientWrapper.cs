@@ -34,17 +34,18 @@ namespace Tg_bigD
         {
             Message message = messageEventArgs.Message;
 
+
             switch (message.Text)
             {
                 // Приветствие для нового пользователя
                 case "/start":
                     {
-                        client.SendTextMessageAsync(message.Chat.Id, "Привет!");;
+                        client.SendTextMessageAsync(message.Chat.Id, "Привет!"); ;
                         break;
                     }
                 default://дефолтный ответ
                     Console.WriteLine(message.Text);
-                    client.SendTextMessageAsync(message.Chat.Id, "Сообщение получено!");
+                    client.SendTextMessageAsync(message.Chat.Id, message.Text);
                     break;
             }
             
