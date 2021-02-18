@@ -4,6 +4,8 @@ using System.Text;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Tg_bigD
 {
@@ -12,7 +14,7 @@ namespace Tg_bigD
         string token;
         //Экзепляр класс TelegramBotClient, нужен для взаимодействия с телегой.
         TelegramBotClient client;
-        public BaseBotClientWrapper(string token)
+        public BaseBotClientWrapper(string token) /// метод
         {
             this.token = token;
             client = new TelegramBotClient(token);
@@ -21,7 +23,9 @@ namespace Tg_bigD
         /// <summary>
         /// Метод для запуска бота
         /// </summary>
-        public void Start()
+        /// 
+        
+        public void Start() /// метод
         {
             client.StartReceiving();
         }
@@ -30,25 +34,56 @@ namespace Tg_bigD
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="messageEventArgs"></param>
-        public virtual void BotOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
+        
+        public virtual void BotOnMessageReceived(object sender, MessageEventArgs messageEventArgs) /// метод
         {
             Message message = messageEventArgs.Message;
-
-
-            switch (message.Text)
+            
+            if (message.Type == Telegram.Bot.Types.Enums.MessageType.Photo)
+            {
+                client.SendPhotoAsync(message.Chat.Id, message.Photo[0].FileId);
+            }
+            else if (message.Type == Telegram.Bot.Types.Enums.MessageType.Text)
+            {
+                client.SendTextMessageAsync(message.Chat.Id, message.Text);
+            }
+            else if (message.Type == Telegram.Bot.Types.Enums.MessageType.Document)
+            {
+                client.SendDocumentAsync(message.Chat.Id, message.Document.FileId);
+            }
+            else if (message.Type == Telegram.Bot.Types.Enums.MessageType.Audio)
+            {
+                client.SendAudioAsync(message.Chat.Id, message.Audio.FileId);
+            }
+            else if (message.Type == Telegram.Bot.Types.Enums.MessageType.Sticker)
+            {
+                client.SendStickerAsync(message.Chat.Id, message.Sticker.FileId);
+            }
+            else if (message.Type == Telegram.Bot.Types.Enums.MessageType.Contact)
+            {
+                client.SendStickerAsync(message.Chat.Id, message.Contact.FirstName);
+            }
+                        /*switch (message.Type)
             {
                 // Приветствие для нового пользователя
                 case "/start":
+                        client.SendTextMessageAsync(message.Chat.Id, "Привет!");
+                        client.SendTextMessageAsync(message.Chat.Id, message.Text);
+                        break;
+                case message.Type == Telegram.Bot.Types.Enums.MessageType.Photo:
                     {
-                        client.SendTextMessageAsync(message.Chat.Id, "Привет!"); ;
+                        client.SendPhotoAsync(message.Chat.Id, send_default);
                         break;
                     }
                 default://дефолтный ответ
-                    Console.WriteLine(message.Text);
-                    client.SendTextMessageAsync(message.Chat.Id, message.Text);
+                    Console.WriteLine(message.Type);
+                    client.SendPhotoAsync(message.Chat.Id, send_default);
+                    client.SendAudioAsync(message.Chat.Id, send_default);
+                    client.SendAudioAsync(message.Chat.Id, send_default);
+
                     break;
-            }
-            
+            }*/
+
         }
     }
 }
